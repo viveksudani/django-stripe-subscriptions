@@ -24,14 +24,13 @@ def create_checkout_session(request):
     if request.method == 'GET':
         stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
         domain_url = os.getenv('DOMAIN_URL')
-        success_url = domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url = domain_url + 'cancel/',
         user_id = request.user.id if request.user.is_authenticated else None
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=user_id,
-                success_url=success_url,
-                cancel_url=cancel_url,
+                success_url=domain_url +
+                'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancel/',
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[
