@@ -7,8 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Django Stripe Subscriptions</title>
-    <script src="https://js.stripe.com/v3/"></script>  <!-- Stripe JS -->
-    <script src="{% static 'main.js' %}"></script> <!-- Main JS -->
     <!-- jquery -->
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
@@ -30,9 +28,8 @@
   </head>
   <body>
     <div class="container mt-5">
-      <button type="submit" class="btn btn-primary" id="submitBtn">
-        Subscribe
-      </button>
+      <p>You have successfully subscribed!</p>
+      <p><a href="{% url 'subscriptions-home' %}">Return to the Home page</a></p>
     </div>
   </body>
 </html>
