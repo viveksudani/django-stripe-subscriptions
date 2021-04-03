@@ -30,9 +30,24 @@
   </head>
   <body>
     <div class="container mt-5">
+      {% if subscription.status == "active" %}
+      <h4>Your subscription:</h4>
+      <div class="card" style="width: 18rem;">
+        <div class="card-header">
+          <h5 class="card-title">{{ product.name }}</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            {{ product.description }}
+          </p>
+          <span>Next Billing Date: {{next_pay_date}}</span>
+        </div>
+      </div>
+    {% else %}
       <button type="submit" class="btn btn-primary" id="submitBtn">
         Subscribe
       </button>
+    {% endif %}
     </div>
   </body>
 </html>

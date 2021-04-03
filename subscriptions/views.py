@@ -1,5 +1,6 @@
 import os
 import stripe
+from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
@@ -14,7 +15,29 @@ STRIPE_ENDPOINT_SECRET = os.getenv('STRIPE_ENDPOINT_SECRET')
 
 @login_required
 def home(request):
-    return render(request, 'home.html')
+    try:
+        # Retrieve the subscription & product
+        stripe.api_key = STRIPE_SECRET_KEY
+        stripe_customer = StripeCustomer.objects.get(user=request.user)
+        stripeSubscriptionId = stripe_customer.stripeSubscriptionId
+        subscription = stripe.Subscription.retrieve(stripeSubscriptionId)
+        product = stripe.Product.retrieve(subscription.plan.product)
+        next_pay_date = subscription.current_period_end
+        next_pay_date = datetime.utcfromtimestamp(next_pay_date)
+        next_pay_date = next_pay_date.strftime('%Y-%m-%d %H:%M:%S')
+        # Feel free to fetch any additional data from
+        # 'subscription' or 'product'
+        # https://stripe.com/docs/api/subscriptions/object
+        # https://stripe.com/docs/api/products/object
+
+        return render(request, 'home.html', {
+            'subscription': subscription,
+            'product': product,
+            'next_pay_date': next_pay_date
+        })
+
+    except StripeCustomer.DoesNotExist:
+        return render(request, 'home.html')
 
 
 @csrf_exempt
